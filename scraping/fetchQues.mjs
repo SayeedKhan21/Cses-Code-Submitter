@@ -1,8 +1,8 @@
 
 
-const fetch = async (page) => {
+const fetchQues = async (page) => {
     
-    await page.goto('https://cses.fi/problemset/list/')
+        await page.goto('https://cses.fi/problemset/list/')
 
     const links = await page.evaluate(()=> {
         const topics = Array.from(document.querySelectorAll('h2') , (e) => e.textContent)
@@ -22,8 +22,10 @@ const fetch = async (page) => {
                
                 if(spanElement.classList.contains('full')){
                     atLeastOne = 1
-                     let question = (liElement.querySelector('a').text)
-                     questionList.push(question)
+                     let title = (liElement.querySelector('a').text)
+                     let code = (liElement.querySelector('a').href)
+                     code = code.substring(code.length-4 )
+                     questionList.push({title ,code})
                 }
             })
             
@@ -37,4 +39,4 @@ const fetch = async (page) => {
 }
 
 
-export default fetch
+export default fetchQues

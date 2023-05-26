@@ -1,14 +1,14 @@
-import fetchReposQuery from "./queries/fetchRepoQuery.mjs"
+import fetchAllReposQuery from "./queries/fetchAllReposQuery.mjs"
+import fetch from "node-fetch"
 
-// console.log(fetchReposQuery)
+
 const query = {
-    name : "fetchRepo" ,
-    query : fetchReposQuery ,
+    name : "fetchRepos" ,
+    query : fetchAllReposQuery ,
     variables : {
-        numberOfRepos : 3
+        numberOfRepos : 14
     },
 }
-
 
 const headers = {
     'Content-type' : 'application/json' ,
@@ -21,11 +21,10 @@ const options = {
     body : JSON.stringify(query)
 }
 
-fetch(process.env.GITHUB_GRAPHQL_ENDPOINT,options) 
-.then(res => res.json())
-.then(data => {
-    data = data['data']
-    data.viewer.repositories.nodes.forEach((node) => {
-        console.log(node.name)
-    })
-})
+async function getAllRepos () {
+    const res = await fetch(process.env.GITHUB_GRAPHQL_ENDPOINT,options) 
+    const jsonres = await res.json()
+    return jsonres
+}
+
+export default getAllRepos
