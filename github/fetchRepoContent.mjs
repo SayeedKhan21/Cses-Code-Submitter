@@ -29,13 +29,14 @@ async function getRepoContent () {
 
     let problemsSolved = []
 
-    fs.readFile('solvedProblems.json' ,(err ,data) =>{
-        console.log(data)
-    })
+    // fs.readFile('solvedProblems.json' ,(err ,data) =>{
+    //     console.log(data)
+    // })
 
     // jsonres.data.repository.object.entries.forEach((node) => {
-        // console.log(node)
+    //     console.log(node)
     // })
+    // console.log(jsonres)
     
 }
 
