@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev1": "node -r dotenv/config scraping/index.mjs ",
-    "dev2": "node -r dotenv/config ./github/addRepo "
+    "dev2": "node -r dotenv/config ./github/addOrFetchRepo.mjs "
   },
   "keywords": [],
   "author": "",

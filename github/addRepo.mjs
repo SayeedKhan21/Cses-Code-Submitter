@@ -8,7 +8,7 @@ const mutation = {
     variables : {
         input: {
             "name" : "CSES_SOLUTIONS"  ,
-            "description": "Repoitory  to maintain cses code solutions",
+            "description": "Repository  to maintain cses code solutions",
             "visibility": "PRIVATE"
         }
     },
@@ -30,5 +30,5 @@ async function addRepo () {
     const jsonres = await res.json()
     console.log(jsonres)
 }
-addRepo()
-// export default addRepo 
+// addRepo()
+export default addRepo 
