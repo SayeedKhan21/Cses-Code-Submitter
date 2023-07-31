@@ -1,7 +1,7 @@
 
 
 function isCategoryPresent(prev ,category){
-    return prev.list.find((prob) => prob.category === category)
+    return prev?.list?.find((prob) => prob.category === category)
 }
 
 function areObjectsEqualWithJSON(obj1, obj2) {
@@ -11,7 +11,7 @@ function areObjectsEqualWithJSON(obj1, obj2) {
     return str1 === str2;
   }
 function getDiffList(prev ,doc){
-    const prevDoc = prev.list.find((prob) => prob.category === doc.category)
+    const prevDoc = prev?.list?.find((prob) => prob.category === doc.category)
     const diffList = []
     for(let docProblem of doc.problemList){
         const isProblemPresent = prevDoc.problemList.find((prob) => {
@@ -37,7 +37,6 @@ const getFileDiff = (prev , recent) => {
             const d = getDiffList(prev , doc)
             if(d.length){
                 
-                // console.log(d)
               newProblem.category = doc.category
               newProblem.problemList = d
             }

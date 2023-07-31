@@ -1,10 +1,10 @@
 import fs from "fs"
 
-const getNewProblems =  async () => {
-    console.log("INSIDE GET NEW LIST")
+const getSolutions =  async () => {
+    
     try {
         const fileContent = await new Promise((resolve, reject) => {
-            fs.readFile('./data/newProblems.json', 'utf-8', (err, content) => {
+            fs.readFile('./data/solutions.json', 'utf-8', (err, content) => {
               if (err) {
                 reject(err);
               } else {
@@ -27,4 +27,4 @@ const getNewProblems =  async () => {
 
 }
 
-export default getNewProblems
+export default getSolutions

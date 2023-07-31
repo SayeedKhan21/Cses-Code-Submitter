@@ -1,17 +1,20 @@
-import getNewList from "./getNewList.mjs"
-import getNewProblems from "../util/getNewProblems.mjs"
+import getNewList from "./getNewList.js"
+import getNewProblems from "../util/getNewProblems.js"
+import fs from "fs"
 
 export default async function fetchSol(page) {
     // console.log("INSIDE FETCHSOL")
     await getNewList(page)
     const newList = await getNewProblems()
     
-    
+    const solutions = {list : []}
+
+    console.log("FETCHING SOLUTIONS ... ")
     
     for (let i in newList.list) {
         
-        const problems = {category : '' , problemList : []}
-        problems.category = i
+        const solution = {category : '' , problemList : []}
+        solution.category = newList.list[i].category
         for (let j of newList.list[i].problemList) {
             
             
@@ -30,7 +33,7 @@ export default async function fetchSol(page) {
            const sol = await page.evaluate(() => {
             res = ""
             let d = document.querySelector('div.linenums')
-            // return d.className
+            
             let children = Array.from(d.querySelectorAll('[class ^= "L"]'))
             children.forEach((child) => {
                 res += (child.textContent)
@@ -39,10 +42,19 @@ export default async function fetchSol(page) {
             
             return res
            })
-           console.log(sol)
+           solution.problemList.push({...j , solution : sol})
+           
         }
+
+        solutions.list.push(solution)
         
     }
    
+   fs.writeFile('./data/solutions.json' , JSON.stringify(solutions) , (err) => {
+    console.log("SOLUTIONS FETCHED")
+    if(err){
+        console.error(err)
+    }
+   })
 
 }

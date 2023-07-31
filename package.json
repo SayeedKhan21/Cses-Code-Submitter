@@ -5,13 +5,15 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev1": "node -r dotenv/config scraping/index.mjs ",
-    "dev2": "node -r dotenv/config ./github/addOrFetchRepo.mjs "
+    "dev1": "node -r dotenv/config scraping/index.js ",
+    "dev2": "node -r dotenv/config api/index.js "
   },
+  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@octokit/core": "^5.0.0",
     "dotenv": "^16.0.3",
     "node-fetch": "^3.3.1",
     "puppeteer": "^19.11.0"
