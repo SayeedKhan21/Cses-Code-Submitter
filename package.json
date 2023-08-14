@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev1": "node -r dotenv/config scraping/index.js ",
-    "dev2": "node -r dotenv/config api/index.js "
+    "dev2": "node -r dotenv/config api/submit.js "
   },
   "type": "module",
   "keywords": [],

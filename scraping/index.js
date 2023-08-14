@@ -2,7 +2,7 @@ import puppeteer from 'puppeteer'
 
 import login from './login.js'
 import fetchSol from './fetchSol.js'
-import submit from "../api/submit.js"
+// import submit from "../api/submit.js"
 
 
 async function init(){
@@ -13,7 +13,7 @@ async function init(){
         await login(page),
         await fetchSol(page)
     ])
-    await submit()
+    // await submit()
     await browser.close()
 }
 
