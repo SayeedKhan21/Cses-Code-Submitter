@@ -1,12 +1,13 @@
-import fetchRepoQuery from "../queries/fetchRepoQuery.js"
+import getHeadCommitOidQuery from "../queries/getHeadCommitOidQuery.js"
 
 
-const query = {
-  name: "fetchRepo",
-  query: fetchRepoQuery,
+const mutation = {
+  name: "getHeadCommit",
+  query: getHeadCommitOidQuery,
   variables: {
-    "owner": process.env.GITHUB_USERNAME ,
-    "name" : process.env.GITHUB_REPO_NAME
+    "repositoryOwner": process.env.GITHUB_USERNAME ,
+    "repositoryName" : process.env.GITHUB_REPO_NAME,
+    "branchName" : "master"
   },
 }
 
@@ -18,13 +19,13 @@ const headers = {
 const options = {
   method: "POST",
   headers: headers,
-  body: JSON.stringify(query)
+  body: JSON.stringify(mutation)
 }
 
 async function fetchRepo() {
-  
   const res = await fetch(process.env.GITHUB_GRAPHQL_ENDPOINT, options)
   const jsonres = await res.json()
+  
   return jsonres
 }
 

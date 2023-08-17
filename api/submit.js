@@ -1,60 +1,49 @@
-import addOrFetch from "./requests/addOrFetchRepo.js"
-import getSolutions from "../util/getSolutions.js"
-import createBlob from "./requests/createBlob.js"
-import getSHA from "./requests/getSha.js"
-import createTree from "./requests/createTree.js"
-import createCommit from "./requests/addRepoContent.js"
+import getSolutions from "../util/getSolutions.js";
+import addOrFetch from "./requests/addOrFetchRepo.js";
+import createCommit from "./requests/createCommit.js";
+import getHeadCommit from "./requests/getHeadCommitOid.js";
 
-const submit = async () => {
-    // console.log("SUBMISSION STARTED ... ")
+let topicLen;
+let topicIndex = 0
+let probIndex = 0
+getSolutions().then(async (data) => {
+  
+  topicLen = data.list.length;
+  await submitProb(data);
+});
 
+const submitProb = async (data) => {
 
-    await addOrFetch()
+  const res = await addOrFetch()
+  addOrFetch().then(async () => {
+    let problemsLen = data.list[topicIndex].problemList.length;
+    const obj = data.list[topicIndex];
+    const prob = obj.problemList[probIndex];
 
-    const res = await getSHA()
-    const baseTreeSHA = (res.data.commit.commit.tree.sha)
+    getHeadCommit().then(async (res) => {
+      try {
+   
+        const commitObj = {
+          headOid: res.data.repository.ref.target.oid,
+          content: Buffer.from(prob.solution).toString("base64"),
+          path: `${obj.category}/${prob.title.replace(" ", "_")}.cpp`,
+        };
 
-    console.log(baseTreeSHA)
-
-    const data = await getSolutions()
-    console.log("STARTED TO SUBMIT ", data)
-    // data.list.forEach(async obj => {
-        const obj = data.list[0]
-        console.log("CATEGORY = " )
-        // obj.problemList.forEach(async prob => {
-            const prob = obj.problemList[0]
-            console.log("TITLE = " , prob.title)
-            try {
-                const blobSha = await createBlob({ content: prob.solution })
-                const treeObj = {
-                    baseTreeSHA,
-                    path: `${prob.title.replace(' ', '_')}.cpp`,
-                    blobSha : blobSha.data.sha
-                }
-                
-                // console.log(blobSha)
-                const res = await createTree(treeObj)
-                // console.log(res.data.tree)
-                const treeSha = res.data.sha
-                const commitObj = {
-                    message : 'Initial commit' ,
-                    baseTreeSHA,
-                    // treeSha,
-                }
-                
-                const commit = await createCommit(commitObj)
-                console.log(commit)
-             
-
+        createCommit(commitObj)
+        .then(() => {
+          if(probIndex == problemsLen - 1){
+            probIndex = 0
+            topicIndex ++ 
+            if(topicIndex == topicLen){
+              return 
             }
-            catch (err) {
-                console.error("PROCESS STOPPED ", err)
-            }
-            
-        // })
-    // })
-
-
-}
-submit()
-// export default submit    
+          }
+          else probIndex ++ 
+          submitProb(data)
+        })
+      } catch (err) {
+        console.error("ERROR OCCURRED :", err);
+      }
+    });
+  });
+};
