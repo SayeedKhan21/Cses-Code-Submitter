@@ -4,7 +4,7 @@ const getSolutions =  async () => {
     
     try {
         const fileContent = await new Promise((resolve, reject) => {
-            fs.readFile('./data/solutions.json', 'utf-8', (err, content) => {
+            fs.readFile('./data/solutions.json', (err, content) => {
               if (err) {
                 reject(err);
               } else {
@@ -21,7 +21,8 @@ const getSolutions =  async () => {
           }
     }
     catch(err){
-        console.error(err)
+      console.log("------------------------ ERROR OCCURRED --------------------------------")
+        // console.error(err)
         throw err
     }
 

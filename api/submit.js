@@ -3,47 +3,63 @@ import addOrFetch from "./requests/addOrFetchRepo.js";
 import createCommit from "./requests/createCommit.js";
 import getHeadCommit from "./requests/getHeadCommitOid.js";
 
-let topicLen;
-let topicIndex = 0
-let probIndex = 0
-getSolutions().then(async (data) => {
-  
-  topicLen = data.list.length;
-  await submitProb(data);
-});
+const submit = () => {
+  let topicLen;
+  let topicIndex = 0;
+  let probIndex = 0;
+  getSolutions().then(async (data) => {
+    topicLen = data.list.length;
+    console.log(
+      "----------------- CATEGORY = ",
+      data.list[0].category,
+      "------------\n"
+    );
+    await submitProb(data);
+  });
 
-const submitProb = async (data) => {
-
-  const res = await addOrFetch()
-  addOrFetch().then(async () => {
+  const submitProb = async (data) => {
+    await addOrFetch();
     let problemsLen = data.list[topicIndex].problemList.length;
     const obj = data.list[topicIndex];
     const prob = obj.problemList[probIndex];
+    console.log("PROBLEM = ", prob.title, "\n");
 
-    getHeadCommit().then(async (res) => {
+    const res = await getHeadCommit();
+    if (res?.data?.repository?.ref?.target === undefined) {
+      submitProb(data)
+    } else {
       try {
-   
         const commitObj = {
           headOid: res.data.repository.ref.target.oid,
           content: Buffer.from(prob.solution).toString("base64"),
           path: `${obj.category}/${prob.title.replace(" ", "_")}.cpp`,
         };
 
-        createCommit(commitObj)
-        .then(() => {
-          if(probIndex == problemsLen - 1){
-            probIndex = 0
-            topicIndex ++ 
-            if(topicIndex == topicLen){
-              return 
+        const result = await createCommit(commitObj);
+        if (result.errors) {
+          submitProb(data);
+        } else {
+          console.log(result, "\n");
+          if (probIndex == problemsLen - 1) {
+            probIndex = 0;
+            topicIndex++;
+            if (topicIndex >= topicLen) {
+              console.log("SUBMISSION COMPLETED");
+              return;
             }
-          }
-          else probIndex ++ 
-          submitProb(data)
-        })
+            console.log(
+              "----------- CATEGORY = ",
+              data.list[topicIndex].category,
+              "--------\n"
+            );
+          } else probIndex++;
+          submitProb(data);
+        }
       } catch (err) {
         console.error("ERROR OCCURRED :", err);
       }
-    });
-  });
+    }
+  };
 };
+
+export default submit;

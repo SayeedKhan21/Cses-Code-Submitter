@@ -5,7 +5,7 @@ import getFileDiff from "../util/getFileDiff.js"
 
 const getNewList = async (page) => {
 
-    console.log("FETCHING QUESTIONS .... ")
+  
     const prob = await fetchQues(page)
     
     let solvedProblems = []

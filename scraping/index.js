@@ -2,18 +2,18 @@ import puppeteer from 'puppeteer'
 
 import login from './login.js'
 import fetchSol from './fetchSol.js'
-// import submit from "../api/submit.js"
+import submit from "../api/submit.js"
 
 
 async function init(){
     const browser = await puppeteer.launch({headless : true})
     const page = await browser.newPage()
-
-    await Promise.all([
+ 
+     await Promise.all([
         await login(page),
-        await fetchSol(page)
+        fetchSol(page)
     ])
-    // await submit()
+    submit()
     await browser.close()
 }
 
